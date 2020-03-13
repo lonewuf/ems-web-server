@@ -13,7 +13,7 @@ const UserSchema = mongoose.Schema({
   },
   pincode: {
     type: String,
-    required: true,
+    default: "123456"
   },
   task_category: {
     type: String,
