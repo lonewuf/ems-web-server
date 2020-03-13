@@ -238,7 +238,7 @@ router.post('/register', async (req, res) => {
 
 
 router.post('/registerr',
-  passport.authenticate('jwt', { session: false }), 
+  auth.isAdmin, 
   function (req, res) {
   // console.log(req.body)
   // var obj = JSON.parse(req.body.upload)
@@ -362,7 +362,7 @@ router.post('/registerr',
 							<p>Password: <strong>${tempPassword}</strong></p>
 							<br>
 							<br>
-							<a href="${userAuth.hostDev}/change-password/${createdEmp._id}">Click here to change your password</a>`
+							<a href="${userAuth.hostProd}/change-password/${createdEmp._id}">Click here to change your password</a>`
 							};
 							transporter.sendMail(mailOptions)
 							.then(info => {
@@ -488,7 +488,7 @@ router.post('/forgot-password', (req, res) => {
       <br><br>
       <p>Click the link to change your password.</p>
       <br>
-      <a href="${userAuth.hostDev}/forgot-password/${foundUser._id}/${createdFoundPassword._id}">Change password</a>`// plain text body
+      <a href="${userAuth.hostProd}/forgot-password/${foundUser._id}/${createdFoundPassword._id}">Change password</a>`// plain text body
       };
       transporter.sendMail(mailOptions)
       .then(info => {

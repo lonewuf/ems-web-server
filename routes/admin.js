@@ -13,8 +13,7 @@ const CompanyNum = require('../models/companyNum')
 const Leave = require('../models/leaves')
 const Report = require('../models/reports')
 
-router.get('/', passport.authenticate('jwt', { session: false }), (req, res) => {
-  console.log("reeeeeeeeeeeeeeeeiiiiiii")
+router.get('/', auth.isAdmin, (req, res) => {
   CompanyNum.find({})
     .then(foundCompanyID => { 
       Report.find({})
@@ -30,14 +29,14 @@ router.get('/', passport.authenticate('jwt', { session: false }), (req, res) => 
                 .populate('leaves')
                 .then(foundUsers => {
 
-                  res.json({
+                  res.render('admin/index', {
                     foundCompanyID,
                     foundReports,
                     foundLeaves,
                     user: req.user,
                     foundUsers,
-                    success: true,
-                    message: 'Admin data recieved successfully'
+                    user: req.user
+
                   })
                 })
                 .catch(err => console.log(err))
@@ -54,7 +53,7 @@ router.get('/', passport.authenticate('jwt', { session: false }), (req, res) => 
   
 });
 
-router.post('/approve-leave/:id', (req, res) => {
+router.post('/approve-leave/:id', auth.isAdmin, (req, res) => {
   const id = req.params.id;
   console.log("aaaaaa", id)
   Leave.updateOne({_id: id}, {$set: {status: '2'}})
@@ -67,15 +66,15 @@ router.post('/approve-leave/:id', (req, res) => {
           if(typeLeave == 'sick_leave') {
             User.updateOne({_id: foundLeave.employee._id}, {$inc: {sick_leave: -parseInt(foundLeave.days_leave)}})
               .then(updatedL => {
-                  console.log("ccccc")
-
-                res.send('Sick Leave approved')
+                req.flash('success', 'Sick Leave approved')
+                res.redirect('back')
               })
               .catch(err => console.log(err))
           } else if(typeLeave == 'vacation_leave') {
             User.updateOne({_id: foundLeave.employee._id}, {$inc: {vacation_leave: -parseInt(foundLeave.days_leave)}})
               .then(updatedL => {
-                res.send( 'Vacation Leave approved')
+                req.flash('success', 'Vacation Leave approved')
+                res.redirect('back')
               })
               .catch(err => console.log(err))
           }
@@ -86,17 +85,18 @@ router.post('/approve-leave/:id', (req, res) => {
     .catch(err => console.log(err))
 })
 
-router.post('/disapprove-leave/:id', (req, res) => {
+router.post('/disapprove-leave/:id', auth.isAdmin, (req, res) => {
   const id = req.params.id;
 
   Leave.updateOne({_id: id}, {$set: {status: '0'}})
     .then(updatedLeave => {
-      res.send("Leave Disapproved")
+      req.flash('warning', 'Leave disapproved')
+      res.redirect('back')
     })
     .catch(err => console.log(err))
 })
 
-router.get('/generate-employee-number', auth.isAdmin,(req, res) => {
+router.get('/generate-employee-number', auth.isAdmin, (req, res) => {
 
   VariableStore.updateOne({target: 'secret-target'}, {$inc: {counter: 1}})
     .then(updatedCounter => {
