@@ -5,10 +5,6 @@ const ForgotPasswordSchema = mongoose.Schema({
    
     email: {
       type: String
-    },
-    date: {
-      type: Date,
-      default: Date.now()
     }
     
 });

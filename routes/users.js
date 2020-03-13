@@ -341,7 +341,7 @@ router.post('/registerr',
             // });
             console.log("zzz")
 						var transporter = nodemailer.createTransport({
-							service: userAuth.tMail,
+							service: userAuth.tMail, 
 							auth: {
 								user: userAuth.uName,
 								pass: userAuth.pW
