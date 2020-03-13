@@ -364,7 +364,7 @@ router.post('/registerr',
                   <p>Password: <strong>${tempPassword}</strong></p>
                   <br>
                   <br>
-                  <a href="${userAuth.hostProd}/forgot-password/${createdEmp._id}/${createdFoundPassword}">Click here to change your password</a>`
+                  <a href="${userAuth.hostProd}/forgot-password/${createdEmp._id}/${createdFoundPassword._id}">Click here to change your password</a>`
                   };
                   transporter.sendMail(mailOptions)
                   .then(info => {
