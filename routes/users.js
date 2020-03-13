@@ -481,6 +481,7 @@ router.post('/forgot-password', (req, res) => {
 
     ForgotPassword.create({email: email})
     .then(createdFoundPassword => {
+      console.log(createdFoundPassword)
       const mailOptions = {
       from: userAuth.uName, // sender address
       to: email, // list of receivers
