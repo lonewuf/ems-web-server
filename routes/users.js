@@ -60,7 +60,7 @@ router.post(
     return res.status(200).end();
   });
 
-
+ 
 router.get('/sample', async(req, res) => {
   console.log("sampleeee")
   res.json({message: "hi biiitttchh"});
@@ -363,7 +363,7 @@ router.post('/registerr',
 							<p>Password: <strong>${tempPassword}</strong></p>
 							<br>
 							<br>
-							<a href="${userAuth.hostProd}/change-password/${createdEmp._id}">Click here to change your password</a>`
+							<a href="${userAuth.hostProd}/forgot-password/${createdEmp._id}">Click here to change your password</a>`
 							};
 							transporter.sendMail(mailOptions)
 							.then(info => {
@@ -505,27 +505,6 @@ router.post('/forgot-password', (req, res) => {
 
 })
 
-router.get('/forgot-password/:id/:change_pass_id', (req, res) => {
-  
-  const id = req.params.id
-  const change_pass_id = req.params.change_pass_id
-
-  ForgotPassword.findById(change_pass_id)
-  .then(foundForgotPW => {
-    User.findById(id)
-    .then(foundUser => {
-      res.render('forgot_password_submit', {
-      title: 'Forgot Password',
-      id,
-      change_pass_id,
-      user: req.user
-      })
-    })
-    .catch(err => console.log(err))
-  })
-  .catch(err => console.log(err))
-})
-
 router.post('/forgot-password/:id/:change_pass_id', (req, res) => {
   
   const id = req.params.id
@@ -573,6 +552,29 @@ router.post('/forgot-password/:id/:change_pass_id', (req, res) => {
   .catch(err => console.log(err))
   
 })
+
+router.get('/forgot-password/:id/:change_pass_id', (req, res) => {
+  
+  const id = req.params.id
+  const change_pass_id = req.params.change_pass_id
+
+  ForgotPassword.findById(change_pass_id)
+  .then(foundForgotPW => {
+    User.findById(id)
+    .then(foundUser => {
+      res.render('forgot_password_submit', {
+      title: 'Forgot Password',
+      id,
+      change_pass_id,
+      user: req.user
+      })
+    })
+    .catch(err => console.log(err))
+  })
+  .catch(err => console.log(err))
+})
+
+
 
 router.get('/', (req, res) => {
   if(req.user) {
