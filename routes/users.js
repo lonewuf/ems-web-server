@@ -347,30 +347,35 @@ router.post('/registerr',
 								pass: userAuth.pW
 							}
 						});
-
-						const mailOptions = {
-							from: userAuth.uName, // sender address
-							to: email, // list of receivers
-							subject: 'ERMSCORE - Employee account', // Subject line
-							html: `<h2>Hi <strong>${createdEmp.name}</strong></h2>
-							<br><br>
-							<p>Welcome to Ermscore</p>
-							<br>
-							<br>
-							<br> 
-							<p>Your username and temporary password is listed below. Please change your password provided in the link below</p>
-							<p>Username/Email: <strong>${createdEmp.email}</strong></p>
-							<p>Password: <strong>${tempPassword}</strong></p>
-							<br>
-							<br>
-							<a href="${userAuth.hostProd}/forgot-password/${createdEmp._id}">Click here to change your password</a>`
-							};
-							transporter.sendMail(mailOptions)
-							.then(info => {
-								req.flash('success', `Employee is successfully created. An email is sent to ${createdEmp.name}'s email which is ${createdEmp.email}`)
-								res.redirect('/admin');
-							})
-							.catch(err => console.log(err))
+            ForgotPassword.create({email: email})
+              .then(createdFoundPassword => { 
+                const mailOptions = {
+                  from: userAuth.uName, // sender address
+                  to: email, // list of receivers
+                  subject: 'ERMSCORE - Employee account', // Subject line
+                  html: `<h2>Hi <strong>${createdEmp.name}</strong></h2>
+                  <br><br>
+                  <p>Welcome to Ermscore</p>
+                  <br>
+                  <br>
+                  <br> 
+                  <p>Your username and temporary password is listed below. Please change your password provided in the link below</p>
+                  <p>Username/Email: <strong>${createdEmp.email}</strong></p>
+                  <p>Password: <strong>${tempPassword}</strong></p>
+                  <br>
+                  <br>
+                  <a href="${userAuth.hostProd}/forgot-password/${createdEmp._id}/${createdFoundPassword}">Click here to change your password</a>`
+                  };
+                  transporter.sendMail(mailOptions)
+                  .then(info => {
+    
+                    req.flash('success', `Employee is successfully created. An email is sent to ${createdEmp.name}'s email which is ${createdEmp.email}`)
+                    res.redirect('/admin');
+                  })
+                  .catch(err => console.log(err))
+              })
+              .catch(err => console.log(err))
+						
 					}
 				})
 				.catch(err => console.log(err))
@@ -492,7 +497,7 @@ router.post('/forgot-password', (req, res) => {
       <br>
       <a href="${userAuth.hostProd}/forgot-password/${foundUser._id}/${createdFoundPassword._id}">Change password</a>`// plain text body
       };
-      transporter.sendMail(mailOptions)
+      transporter.sendMail(mailOptions) 
       .then(info => {
         req.flash('success', 'We will send you an email if your email is in our system')
         res.redirect('/');
