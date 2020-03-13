@@ -97,47 +97,16 @@ app.use(function (req, res, next) {
     next();
 });
 
-require('./config/passport2')(passport);
-
+// Passport Config
+require('./config/passport')(passport);
+// Passport Middleware
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use((req, res, next) => {
   res.locals.user = req.user || null;
   next();
 });
-
-
-
-// storage = multer.diskStorage({
-//     destination: './uploads/',
-//     filename: function(req, file, cb) {
-//       return crypto.pseudoRandomBytes(16, function(err, raw) {
-//         if (err) {
-//           return cb(err);
-//         }
-//         return cb(null, "" + (raw.toString('hex')) + (path.extname(file.originalname)));
-//       });
-//     }
-//   });
-
-
-// // Post files
-// app.post(
-//   "/upload",
-//   multer({
-//     storage: storage
-//   }).single('upload'), function(req, res) {
-//     console.log(req.file);
-//     console.log(req.body);
-//   var obj = JSON.parse(req.body.upload);
-//     console.log(obj, obj.name);
-//   fs.copyFile(`${__dirname}/uploads/${req.file.filename}`, `${__dirname}/uploads/try/${req.file.filename}`, (err) => {
-//     if (err) throw err;
-//     console.log('source.txt was copied to destination.txt');
-//   });
-//     res.redirect("/uploads/" + req.file.filename);
-//     console.log(req.file.filename);
-//     return res.status(200).end();
-//   });
 
 
 // Import all routes
