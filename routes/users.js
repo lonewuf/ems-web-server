@@ -232,7 +232,7 @@ router.post('/register', async (req, res) => {
     }
   } catch(err) {
     console.log(err)
-  } 
+  }  
 
 })
 
@@ -294,7 +294,8 @@ router.post('/registerr',
     console.log(err);
 
     if (user) {
-    res.send('Email exists, choose another!');
+      req.flash('danger', 'Email exists, choose another!');
+      res.redirect('back');
     } else {
       console.log("aaa")
 			var password = helpers.randomPassword(8)
@@ -366,8 +367,8 @@ router.post('/registerr',
 							};
 							transporter.sendMail(mailOptions)
 							.then(info => {
-								res.send(`Employee is successfully created`)
-								// res.redirect('/admin');
+								req.flash('success', `Employee is successfully created. An email is sent to ${createdEmp.name}'s email which is ${createdEmp.email}`)
+								res.redirect('/admin');
 							})
 							.catch(err => console.log(err))
 					}
