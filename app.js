@@ -18,7 +18,7 @@ const auth = require('./config/auth');``
 
 // Setup Database
 const myDb = require('./config/database');
-mongoose.connect(myDb.databaseProd, { useNewUrlParser: true });
+mongoose.connect(myDb.database, { useNewUrlParser: true });
 mongoose.connection
   .then(() => console.log('Database is running'))
   .catch(err => console.long(`Database Error: ${err}`));
